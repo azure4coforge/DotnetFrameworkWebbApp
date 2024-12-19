@@ -1,0 +1,31 @@
+trigger:
+  - main # Adjust branch as needed
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  imageName: 'mvc-dotnet-webapp'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndPush
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              packageType: 'sdk'
+              version: '5.0.x' # Ensure .NET Framework build tools are available
+
+          - script: |
+              echo Building Docker image...
+              docker build -t $(imageName):$(Build.BuildId) .
+            displayName: 'Build Docker Image'
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'your-acr-service-connection'
+              repository: '$(imageName)'
+              command: 'push'
+              tags: |
+                $(Build.BuildId)

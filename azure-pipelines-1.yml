@@ -15,7 +15,7 @@ variables:
   dockerRegistryServiceConnection: 'c4980775-4ea2-4e97-8821-312b2b419954'
   imageRepository: 'azurecoforgedotnetframeworkwebbapp'
   containerRegistry: 'azecrdockerimages.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/publish/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
  
   # Agent VM image name

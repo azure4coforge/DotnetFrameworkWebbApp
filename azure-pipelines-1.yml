@@ -20,6 +20,7 @@ variables:
   blobStorageAccount: 'acrblob'
   blobContainer: 'logs'
   blobSasToken: 'sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-03-09T01:14:44Z&st=2025-03-03T17:14:44Z&spr=https&sig=uLu299QWOsrZ2jGGTXLut%2FzLN7BhLOiEi7Fxo%2FAjNxU%3D'
+  azureSubscription: '5f803048-e607-402d-be92-edc0eb6477ee'
  
   # Agent VM image name
   vmImageName: 'windows-latest'
@@ -45,10 +46,18 @@ stages:
         tags: |
           $(tag)
 - stage: CopyToBlob
+  displayName: Copy to Blob Storage
   jobs:
   - job: Copy
+    displayName: Copy Image to Blob Storage
+    pool:
+      vmImage: $(vmImageName)
     steps:
-    - script: |
-        az acr import --name $(containerRegistry) --source $(containerRegistry)/$(imageRepository):$(tag) --image $(imageRepository):$(tag)
-        az storage blob copy start --account-name $(blobStorageAccount) --destination-container $(blobContainer) --destination-blob $(imageRepository):$(tag).tar --source-uri "https://$(containerRegistry)/v2/$(imageRepository)/manifests/$(tag)?$(blobSasToken)"
-      displayName: 'Copy Image to Blob Storage'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr import --name $(containerRegistry) --source $(containerRegistry)/$(imageRepository):$(tag) --image $(imageRepository):$(tag)
+          az storage blob copy start --account-name $(blobStorageAccount) --destination-container $(blobContainer) --destination-blob $(imageRepository):$(tag).tar --source-uri "https://$(containerRegistry)/v2/$(imageRepository)/manifests/$(tag)?$(blobSasToken)"

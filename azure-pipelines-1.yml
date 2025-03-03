@@ -17,6 +17,9 @@ variables:
   containerRegistry: 'acrisuzu.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
+  blobStorageAccount: 'acrblob'
+  blobContainer: 'logs'
+  blobSasToken: 'sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-03-09T01:14:44Z&st=2025-03-03T17:14:44Z&spr=https&sig=uLu299QWOsrZ2jGGTXLut%2FzLN7BhLOiEi7Fxo%2FAjNxU%3D'
  
   # Agent VM image name
   vmImageName: 'windows-latest'
@@ -41,3 +44,11 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+- stage: CopyToBlob
+  jobs:
+  - job: Copy
+    steps:
+    - script: |
+        az acr import --name $(containerRegistry) --source $(containerRegistry)/$(imageRepository):$(tag) --image $(imageRepository):$(tag)
+        az storage blob copy start --account-name $(blobStorageAccount) --destination-container $(blobContainer) --destination-blob $(imageRepository):$(tag).tar --source-uri "https://$(containerRegistry)/v2/$(imageRepository)/manifests/$(tag)?$(blobSasToken)"
+      displayName: 'Copy Image to Blob Storage'

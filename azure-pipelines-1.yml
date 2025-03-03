@@ -14,7 +14,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'c4980775-4ea2-4e97-8821-312b2b419954'
   imageRepository: 'azurecoforgedotnetframeworkwebbapp'
-  containerRegistry: 'azecrdockerimages.azurecr.io'
+  containerRegistry: 'acrisuzu.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
  

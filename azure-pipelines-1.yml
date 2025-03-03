@@ -20,7 +20,7 @@ variables:
   blobStorageAccount: 'acrblob'
   blobContainer: 'logs'
   blobSasToken: 'sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-03-09T01:14:44Z&st=2025-03-03T17:14:44Z&spr=https&sig=uLu299QWOsrZ2jGGTXLut%2FzLN7BhLOiEi7Fxo%2FAjNxU%3D'
-  azureSubscription: '5f803048-e607-402d-be92-edc0eb6477ee'
+  azureSubscription: 'azacrrm'
  
   # Agent VM image name
   vmImageName: 'windows-latest'

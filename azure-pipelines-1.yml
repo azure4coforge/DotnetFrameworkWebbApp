@@ -59,5 +59,6 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          az acr repository delete --name $(containerRegistry) --image $(imageRepository):$(tag) --yes
           az acr import --name $(containerRegistry) --source $(containerRegistry)/$(imageRepository):$(tag) --image $(imageRepository):$(tag)
-          az storage blob copy start --account-name $(blobStorageAccount) --destination-container $(blobContainer) --destination-blob $(imageRepository):$(tag).tar --source-uri "https://$(containerRegistry)/v2/$(imageRepository)/manifests/$(tag)?$(blobSasToken)"
+          az storage blob copy start --account-name $(blobStorageAccount) --destination-container $(blobContainer) --destination-blob $(imageRepository):$(tag).tar --source-uri "https://$(containerRegistry).azurecr.io/v2/$(imageRepository)/manifests/$(tag)?$(blobSasToken)"
